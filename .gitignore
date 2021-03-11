@@ -1,0 +1,12 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Misc
+.idea
+.DS_Store
+.pkl_*
+*.log
+.project
+.pydevproject
+.vscode

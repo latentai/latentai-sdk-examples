@@ -1,1 +1,1 @@
-# examples
+# Latent AI SDK examples
