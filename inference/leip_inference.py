@@ -1,4 +1,4 @@
-#  Copyright (c) 2019 by LatentAI Inc.
+    #  Copyright (c) 2019 by LatentAI Inc.
 #  All rights reserved.
 #  This file is part of the LEIP(tm) SDK,
 #  and is released under the "LatentAI Commercial Software License".
@@ -40,7 +40,7 @@ class LEIPModel():
     def load(self, base, context):
         # Build runtime
         logging.debug("\nBuilding runtime\n")
-        self.module = utils.create_runtime_module(base, context)
+        self.module = utils.create_leip_runtime_module(base, context)
 
         # Dry run to load model completely into memory
         self.module.run()

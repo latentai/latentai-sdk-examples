@@ -83,7 +83,7 @@ if __name__ == '__main__':
     preprocessor = utils.collect_preprocessor(preprocessor)
 
     # Create model object for inference
-    model = TFModel(base, config)
+    model = TFModel(base, context, config)
 
     acc = 0
 

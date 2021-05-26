@@ -35,7 +35,7 @@ REP_DATASET_IMAGE=`du -a $DATASET_DIR | grep jpg | head -1 | awk '{print $2}'`
 # Clean and create fresh folders
 rm -rf $BASE_OUTPUT_PATH
 
-mkdir -p $BASE_OUTPUT_PATH/convert
+mkdir -p $BASE_OUTPUT_PATH/compress_int8
 mkdir -p $BASE_OUTPUT_PATH/compile
 mkdir -p $BASE_OUTPUT_PATH/evaluate
 
@@ -44,14 +44,14 @@ echo $REP_DATASET_IMAGE > rep_dataset.txt
 
 # compress and convert Model to tflite.
 leip compress --input_path=$MODEL_DIR \
-              --output_path=$BASE_OUTPUT_PATH/convert \
+              --output_path=$BASE_OUTPUT_PATH/compress_int8 \
               --data_type=uint8 \
               --rep_dataset=rep_dataset.txt
 
 rm rep_dataset.txt
 
 # evaluate uint in tflite
-leip evaluate --input_path=$BASE_OUTPUT_PATH/convert \
+leip evaluate --input_path=$BASE_OUTPUT_PATH/compress_int8 \
               --test_path=$DATASET_DIR/index.txt \
               --class_names=$DATASET_DIR/class_names.txt \
               --task=classifier \
@@ -63,7 +63,7 @@ leip evaluate --input_path=$BASE_OUTPUT_PATH/convert \
 ##
 
 # compile
-leip compile --input_path=$BASE_OUTPUT_PATH/convert \
+leip compile --input_path=$BASE_OUTPUT_PATH/compress_int8 \
              --output_path=$BASE_OUTPUT_PATH/compile \
              --input_types=uint8 \
              --storage_int8 false
