@@ -112,23 +112,26 @@ def load_keras_model(path):
     return tf.keras.models.load_model(path)
 
 
-def create_runtime_module(base, context):
-    # Load the graph, functions and weights of the function into memory
+def create_leip_runtime_module(base, context):
+    # Collect TVM Context Definitions for execution engine
+    ctx = get_tvm_context(context)
+
+    # Check for legacy runtime artifacts
+    if os.path.isfile(os.path.join(base, "modelDescription.json")) and os.path.isfile(os.path.join(base, "modelParams.params")):
+        # Load the graph, functions and weights of the function into memory
+        return create_multi_artifact_runtime(base, ctx)
+    return create_single_artifact_runtime(base, ctx)
+        
+
+def create_multi_artifact_runtime(base, ctx):
     graph = load_json(os.path.join(base, "modelDescription.json"))
     lib = tvm.runtime.load_module(os.path.join(base, "modelLibrary.so"))
     params = read_binary_file(os.path.join(base, "modelParams.params"))
 
-    # Collect TVM Context Definitions for execution engine
-    ctx = get_tvm_context(context)
-
     # Reimann
-    precision = 'float32'
-    if "leip" in graph:
-        precision = graph["leip"].get("precision")
-        del graph["leip"]
+    
+    cast_params = get_cast_params(params, base, os.path.isfile(os.path.join(base, "quantParams.params")))
     graph = json.dumps(graph)
-
-    cast_params = get_cast_params(precision, params, base)
 
     # Create TVM runtime module and load weights
     module = graph_runtime.create(graph, lib, ctx)
@@ -136,13 +139,18 @@ def create_runtime_module(base, context):
     return module
 
 
+def create_single_artifact_runtime(base, ctx):
+    lib = tvm.runtime.load_module(os.path.join(base, "modelLibrary.so"))
+    return tvm.contrib.graph_runtime.GraphModule(lib['default'](ctx))
+
+
 def get_tvm_context(context):
-    return tvm.context(context) if context in ['cuda', 'cpu', 'gpu'] else tvm.cpu(0)
+    return tvm.device(context) if context in ['cuda', 'cpu', 'gpu'] else tvm.cpu(0)
 
 
-def get_cast_params(precision, loaded_params, base):
-    if precision == 'int8' or precision == 'uint8':
-        quantization_file = glob.glob(os.path.join(base, "quant*"))[0]
+def get_cast_params(loaded_params, base, quant_params_exist):
+    if quant_params_exist:
+        quantization_file = glob.glob(os.path.join(base, "quantParams.params"))[0]
         loaded_params_qparams = read_binary_file(quantization_file)
         return dequantize(loaded_params, loaded_params_qparams)
     return loaded_params
@@ -159,13 +167,15 @@ def dequantize(params, q_params):
     q_params_dict = relay.load_param_dict(q_params)
     params_dict = relay.load_param_dict(params)
 
-    for i in params_dict:
-        quant_arr = params_dict[i].asnumpy()
-        q_params = q_params_dict[i].asnumpy()
+    for k, v in params_dict.items():
+        quant_arr = params_dict[k].asnumpy()
+        q_params = q_params_dict[k].asnumpy()
         scale = q_params[3]
         zpoint = q_params[4]
         dequant_array = np.multiply(scale, (quant_arr - zpoint)).astype(np.float32)
 
-        dequantized_dict[i] = tvm.runtime.ndarray.array(dequant_array)
+        dequantized_dict[k] = tvm.runtime.ndarray.array(dequant_array)
 
     return relay.save_param_dict(dequantized_dict)
+
+
