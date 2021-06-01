@@ -129,7 +129,8 @@ def create_multi_artifact_runtime(base, ctx):
     params = read_binary_file(os.path.join(base, "modelParams.params"))
 
     # Reimann
-    
+    if "leip" in graph:
+        del graph["leip"]
     cast_params = get_cast_params(params, base, os.path.isfile(os.path.join(base, "quantParams.params")))
     graph = json.dumps(graph)
 
