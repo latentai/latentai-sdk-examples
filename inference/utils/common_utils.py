@@ -10,7 +10,6 @@
 # @author  Videet Parekh
 #
 # @date    Wed, 16 Dec 20
-
 from .preprocessors import ImagePreprocessor
 
 import json
@@ -24,7 +23,7 @@ import tvm
 from tvm import relay
 from tvm.contrib import graph_runtime
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '4'
+
 import tensorflow as tf  # noqa: E402
 
 

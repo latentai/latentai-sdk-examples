@@ -11,15 +11,15 @@
 #
 # @date    Wed, 16 Dec 20
 
-from keras.applications.imagenet_utils import preprocess_input
+
 import numpy as np
 import sys
 import os
-
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '4'
 stderr = sys.stderr
 sys.stderr = open(os.devnull, 'w')
+from keras.applications.imagenet_utils import preprocess_input
 sys.stderr = stderr
-
 
 class ImagePreprocessor():
     def none(self, img):
