@@ -10,7 +10,6 @@
 # @author  Videet Parekh
 #
 # @date    Wed, 16 Dec 20
-
 from .preprocessors import ImagePreprocessor
 
 import json
@@ -24,7 +23,7 @@ import tvm
 from tvm import relay
 from tvm.contrib import graph_runtime
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '4'
+
 import tensorflow as tf  # noqa: E402
 
 
@@ -129,7 +128,8 @@ def create_multi_artifact_runtime(base, ctx):
     params = read_binary_file(os.path.join(base, "modelParams.params"))
 
     # Reimann
-    
+    if "leip" in graph:
+        del graph["leip"]
     cast_params = get_cast_params(params, base, os.path.isfile(os.path.join(base, "quantParams.params")))
     graph = json.dumps(graph)
 
