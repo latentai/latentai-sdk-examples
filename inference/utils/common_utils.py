@@ -21,7 +21,7 @@ from PIL import Image
 import logging
 import tvm
 from tvm import relay
-from tvm.contrib import graph_runtime
+from tvm.contrib import graph_executor
 
 
 import tensorflow as tf  # noqa: E402
@@ -134,14 +134,14 @@ def create_multi_artifact_runtime(base, ctx):
     graph = json.dumps(graph)
 
     # Create TVM runtime module and load weights
-    module = graph_runtime.create(graph, lib, ctx)
+    module = graph_executor.create(graph, lib, ctx)
     module.load_params(cast_params)
     return module
 
 
 def create_single_artifact_runtime(base, ctx):
     lib = tvm.runtime.load_module(os.path.join(base, "modelLibrary.so"))
-    return tvm.contrib.graph_runtime.GraphModule(lib['default'](ctx))
+    return graph_executor.GraphModule(lib['default'](ctx))
 
 
 def get_tvm_context(context):
