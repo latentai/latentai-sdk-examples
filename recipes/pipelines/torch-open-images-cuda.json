@@ -1,0 +1,63 @@
+{
+  "model": {
+    "input": {
+      "shapes": [[1, 3, 224, 224]]
+    },
+    "inference_context": "cuda"
+  },
+  "flows": [{
+    "name": "baseline",
+    "steps": [{
+      "evaluate": {
+        "test_path": "workspace/datasets/open-images-10-classes/eval/index.txt",
+        "class_names": "workspace/datasets/open-images-10-classes/eval/class_names.txt"
+      }
+    }, {
+      "compile": {
+        "target": "cuda"
+      }
+    }, {
+      "evaluate": {
+        "test_path": "workspace/datasets/open-images-10-classes/eval/index.txt",
+        "class_names": "workspace/datasets/open-images-10-classes/eval/class_names.txt"
+      }
+    }]
+  }, {
+    "name": "lorenz-like",
+    "steps": [{
+      "optimize": {
+        "compress": {
+          "data_type": "int8",
+          "rep_dataset": "workspace/datasets/open-images-10-classes/eval/rep_dataset.txt",
+          "use_legacy_quantizer": true
+        },
+        "compile": {
+          "target": "cuda"
+        }
+      }
+    }, {
+      "evaluate": {
+        "test_path": "workspace/datasets/open-images-10-classes/eval/index.txt",
+        "class_names": "workspace/datasets/open-images-10-classes/eval/class_names.txt"
+      }
+    }]
+  }, {
+    "name": "turing",
+    "steps": [{
+      "optimize": {
+        "compress": {
+          "data_type": "uint8",
+          "rep_dataset": "workspace/datasets/open-images-10-classes/eval/rep_dataset.txt"
+        },
+        "compile": {
+          "target": "cuda"
+        }
+      }
+    }, {
+      "evaluate": {
+        "test_path": "workspace/datasets/open-images-10-classes/eval/index.txt",
+        "class_names": "workspace/datasets/open-images-10-classes/eval/class_names.txt"
+      }
+    }]
+  }]
+}

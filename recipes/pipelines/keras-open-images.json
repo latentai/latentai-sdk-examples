@@ -1,0 +1,142 @@
+{
+  "model": {
+    "input": {
+      "shapes": [[1, 224, 224, 3]]
+    }
+  },
+  "flows": [{
+    "name": "baseline",
+    "steps": [{
+      "evaluate": {
+        "test_path": "workspace/datasets/open-images-10-classes/eval/index.txt",
+        "class_names": "workspace/datasets/open-images-10-classes/eval/class_names.txt"
+      }
+    }, {
+      "compile": {
+        "crc_check": true
+      }
+    }, {
+      "evaluate": {
+        "test_path": "workspace/datasets/open-images-10-classes/eval/index.txt",
+        "class_names": "workspace/datasets/open-images-10-classes/eval/class_names.txt"
+      }
+    }]
+  }, {
+    "name": "lorenz-asymmetric",
+    "steps": [{
+      "optimize": {
+        "compress": {
+          "quantizer": "asymmetric",
+          "data_type": "uint8",
+          "rep_dataset": "workspace/datasets/open-images-10-classes/eval/rep_dataset.txt",
+          "use_legacy_quantizer": true
+        },
+        "compile": {
+          "crc_check": true
+        }
+      }
+    }, {
+      "evaluate": {
+        "test_path": "workspace/datasets/open-images-10-classes/eval/index.txt",
+        "class_names": "workspace/datasets/open-images-10-classes/eval/class_names.txt"
+      }
+    }]
+  }, {
+    "name": "lorenz-symmetric",
+    "steps": [{
+      "optimize": {
+        "compress": {
+          "quantizer": "symmetric",
+          "data_type": "int8",
+          "rep_dataset": "workspace/datasets/open-images-10-classes/eval/rep_dataset.txt",
+          "use_legacy_quantizer": true
+        },
+        "compile": {
+          "crc_check": true
+        }
+      }
+    }, {
+      "evaluate": {
+        "test_path": "workspace/datasets/open-images-10-classes/eval/index.txt",
+        "class_names": "workspace/datasets/open-images-10-classes/eval/class_names.txt"
+      }
+    }]
+  }, {
+    "name": "lorenz-symmetricpc",
+    "steps": [{
+      "optimize": {
+        "compress": {
+          "quantizer": "symmetricpc",
+          "data_type": "int8",
+          "rep_dataset": "workspace/datasets/open-images-10-classes/eval/rep_dataset.txt",
+          "use_legacy_quantizer": true
+        },
+        "compile": {
+          "crc_check": true
+        }
+      }
+    }, {
+      "evaluate": {
+        "test_path": "workspace/datasets/open-images-10-classes/eval/index.txt",
+        "class_names": "workspace/datasets/open-images-10-classes/eval/class_names.txt"
+      }
+    }]
+  }, {
+    "name": "turing-asymmetric",
+    "steps": [{
+      "optimize": {
+        "compress": {
+          "quantizer": "asymmetric",
+          "data_type": "uint8",
+          "rep_dataset": "workspace/datasets/open-images-10-classes/eval/rep_dataset.txt"
+        },
+        "compile": {
+          "crc_check": true
+        }
+      }
+    }, {
+      "evaluate": {
+        "test_path": "workspace/datasets/open-images-10-classes/eval/index.txt",
+        "class_names": "workspace/datasets/open-images-10-classes/eval/class_names.txt"
+      }
+    }]
+  }, {
+    "name": "turing-symmetric",
+    "steps": [{
+      "optimize": {
+        "compress": {
+          "quantizer": "symmetric",
+          "data_type": "int8",
+          "rep_dataset": "workspace/datasets/open-images-10-classes/eval/rep_dataset.txt"
+        },
+        "compile": {
+          "crc_check": true
+        }
+      }
+    }, {
+      "evaluate": {
+        "test_path": "workspace/datasets/open-images-10-classes/eval/index.txt",
+        "class_names": "workspace/datasets/open-images-10-classes/eval/class_names.txt"
+      }
+    }]
+  }, {
+    "name": "turing-symmetricpc",
+    "steps": [{
+      "optimize": {
+        "compress": {
+          "quantizer": "symmetricpc",
+          "data_type": "int8",
+          "rep_dataset": "workspace/datasets/open-images-10-classes/eval/rep_dataset.txt"
+        },
+        "compile": {
+          "crc_check": true
+        }
+      }
+    }, {
+      "evaluate": {
+        "test_path": "workspace/datasets/open-images-10-classes/eval/index.txt",
+        "class_names": "workspace/datasets/open-images-10-classes/eval/class_names.txt"
+      }
+    }]
+  }]
+}
