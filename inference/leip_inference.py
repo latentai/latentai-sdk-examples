@@ -1,4 +1,4 @@
-    #  Copyright (c) 2019 by LatentAI Inc.
+    #  Copyright (c) 2021 by LatentAI Inc.
 #  All rights reserved.
 #  This file is part of the LEIP(tm) SDK,
 #  and is released under the "LatentAI Commercial Software License".
@@ -11,13 +11,16 @@
 #
 # @date    Wed, 16 Dec 20
 '''
-This script is designed to run a model compiled with LEIP compile. By default, LEIP compile generates 4 artifacts:
+This script is designed to run a model compiled with LEIP compile. By default, LEIP compile generates 1 artifact:
+             - modelLibrary.so       - A binary containing weights, graph and functions for a model
+
+This script also supports the legacy LEIP compile artifacts, as below:
              - modelDescription.json - Model graph
              - modelParams.params    - Model weights
              - modelLibrary.so       - Model layers as callable functions
              - modelSchema.json      - Model descriptor file containing model metadata
 
-A fifth artifact - quantParams.params - is generated when compiled with float32 inputs and to data-type (u)int8
+A fifth artifact - quantParams.params - is generated when compiled with float32 inputs and to data-type (u)int8, now a deprecated command in the LEIP SDK.
 
 This script accepts a path to a directory containing ALL the above files, a path to a database index file in
 LEIP Dataset format, a classnames filepath in a LEIP Dataset format, and several other arguments to effectively
