@@ -1,4 +1,4 @@
-#  Copyright (c) 2019 by LatentAI Inc.
+#  Copyright (c) 2021 by LatentAI Inc.
 #  All rights reserved.
 #  This file is part of the LEIP(tm) SDK,
 #  and is released under the "LatentAI Commercial Software License".
