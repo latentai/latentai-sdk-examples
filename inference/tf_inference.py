@@ -80,7 +80,6 @@ if __name__ == '__main__':
 
     # Load dataset and collect preprocessor function
     data_index = utils.load_index(test_path)
-    preprocessor = utils.collect_preprocessor(preprocessor)
 
     # Create model object for inference
     model = TFModel(base, context, config)

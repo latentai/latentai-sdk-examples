@@ -92,7 +92,6 @@ if __name__ == '__main__':
 
     # Load dataset and collect preprocessor function
     data_index = utils.load_index(test_path)
-    preprocessor = utils.collect_preprocessor(preprocessor)
 
     # Get model schema for configuration of runtime
     config = utils.load_json(base_path + 'model_schema.json')
