@@ -10,7 +10,7 @@
 # @author  Videet Parekh
 #
 # @date    Wed, 16 Dec 20
-from .preprocessors import ImagePreprocessor
+from leip.core.preprocessors.factory import get_sdk_preprocessor
 
 import json
 import glob
@@ -32,6 +32,7 @@ def collect_image(test_path, data_type, preprocessor, shape):
     rgb_im = im.convert('RGB')
     rgb_im = rgb_im.resize(shape[1:3])
     data = np.array(rgb_im)[np.newaxis, :].astype(data_type)
+    preprocessor = get_sdk_preprocessor(preprocessor, input_shape=shape, input_type=data_type)
     return preprocessor(data)
 
 
@@ -64,11 +65,6 @@ def load_json(path, ordered=False):
 def write_json(path, data):
     with open(path, 'w') as f:
         return json.dump(data, f, indent=4)
-
-
-def collect_preprocessor(preprocessor):
-    imgPreprocessor = ImagePreprocessor()
-    return getattr(imgPreprocessor, preprocessor.lower())
 
 
 def parse_input_shapes(shape_str, batch_size=1):
